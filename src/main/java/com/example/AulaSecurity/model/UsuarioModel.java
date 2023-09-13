@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_usuarios")
@@ -25,6 +26,11 @@ public class UsuarioModel implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @ManyToMany
+    @JoinTable(name = "tb_usuarios_roles", joinColumns = @JoinColumn(name = "id_usuario"),
+    inverseJoinColumns = @JoinColumn(name = "id_role"))
+    private List<RoleModel> roles;
+
     @Override
     public String getPassword(){
         return this.password;
@@ -36,7 +42,7 @@ public class UsuarioModel implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roles;
     }
 
     @Override
